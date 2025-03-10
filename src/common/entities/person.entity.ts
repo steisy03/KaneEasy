@@ -13,16 +13,16 @@ export class Person {
     first_name: string;
     
     @Column({ type: 'varchar', length: 100 })
-    las_name: string;
+    last_name: string;
     
-    @Column()
-    identification: number;
+    @Column({ type: 'varchar', length: 15 })
+    identification: string;
 
     @Column({ type: 'varchar', length: 250 })
     email: string;
 
-    @Column()
-    phone: number;
+    @Column({ type: 'varchar', length: 15 })
+    phone: string;
 
     @Column({ type: 'varchar', length: 250 })
     address: string;
@@ -36,7 +36,7 @@ export class Person {
     @Column({ type: 'int' })
     sector: number;
 
-    @OneToMany(() => LoanRequest, (loanRequest) => loanRequest.person_id)
+    @OneToMany(() => LoanRequest, (loanRequest) => loanRequest.person)
     loanRequests: LoanRequest[];
 
     

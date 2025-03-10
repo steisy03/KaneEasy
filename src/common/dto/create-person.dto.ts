@@ -1,8 +1,6 @@
-import { IsString,IsInt, IsNotEmpty, MinLength, IsEmail } from 'class-validator';
+import { IsInt, IsString, IsNotEmpty, MinLength } from 'class-validator';
 
-export class CreateLoanRequestDto {
-
-    //person
+export class CreatePersonDto {
     @IsString()
     @IsNotEmpty()
     @MinLength(100)
@@ -13,21 +11,15 @@ export class CreateLoanRequestDto {
     @MinLength(100)
     last_name: string;
 
-    @IsInt()
+    @IsString()
     @IsNotEmpty()
     @MinLength(15)
     identification: string;
 
     @IsString()
     @IsNotEmpty()
-    @IsEmail()
     @MinLength(250)
     email: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(15)
-    phone: string;
 
     @IsString()
     @IsNotEmpty()
@@ -36,26 +28,18 @@ export class CreateLoanRequestDto {
 
     @IsInt()
     @IsNotEmpty()
-    province: number;
+    city: number;
 
     @IsInt()
     @IsNotEmpty()
-    city: number;
+    province: number;
 
     @IsInt()
     @IsNotEmpty()
     sector: number;
 
-    //loan request
-    @IsInt()
+    @IsString()
     @IsNotEmpty()
-    amount: number;
-
-    @IsInt()
-    @IsNotEmpty()
-    years: number;
-
-    @IsInt()
-    @IsNotEmpty()
-    loan_type: number;
+    @MinLength(250)
+    phone: string;
 }

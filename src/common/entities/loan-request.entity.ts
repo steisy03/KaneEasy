@@ -7,18 +7,18 @@ export class LoanRequest {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 100 })
-  amount: string;
+  @Column()
+  amount: number;
 
   @Column({ type: 'int' })
-  years: string;
+  years: number;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, default: 'pending' })
   status: string;
 
   @ManyToOne(() => Person, (person) => person.loanRequests)
-  person_id: Person;
+  person: Person;
 
   @ManyToOne(() => LoanType, (loanType) => loanType.loan_requests)
-  loan_type_id: LoanType;
+  loan_type: LoanType;
 }

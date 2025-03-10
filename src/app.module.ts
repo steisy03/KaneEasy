@@ -3,6 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { LoanRequestModule } from './modules/loan-request/loan-request.module';
+import { PersonModule } from './modules/person/person.module';
+import { LoanTypeModule } from './modules/loan-type/loan-type.module';
 
 @Module({
   imports: [
@@ -19,6 +22,9 @@ import { UsersModule } from './modules/users/users.module';
     }),
     UsersModule,
     AuthModule,
+    LoanRequestModule,
+    PersonModule,
+    LoanTypeModule,
   ],
 })
 export class AppModule {}
