@@ -21,4 +21,6 @@ export class LoanRequest {
 
   @ManyToOne(() => LoanType, (loanType) => loanType.loan_requests)
   loan_type: LoanType;
+
+  amortization?: number;
 }

@@ -8,6 +8,9 @@ export class LoanType {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
+  @Column({default: 0})
+  interest_rate: number;
+
   @Column({ type: 'varchar', length: 250 })
   description: string;
 

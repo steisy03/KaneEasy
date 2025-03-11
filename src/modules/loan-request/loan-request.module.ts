@@ -7,6 +7,7 @@ import { LoanRequest } from 'src/common/entities/loan-request.entity';
 import { LoanTypeService } from '../loan-type/loan-type.service';
 import { Person } from 'src/common/entities/person.entity';
 import { LoanType } from 'src/common/entities/loan-type.entity';
+import { LoanRequestV2Controller } from './loan-request-v2.controller';
 
 @Module({
     imports: [
@@ -15,7 +16,7 @@ import { LoanType } from 'src/common/entities/loan-type.entity';
         TypeOrmModule.forFeature([LoanType]),
     ],
     providers: [LoanRequestService, PersonService, LoanTypeService],
-    controllers: [LoanRequestController],
+    controllers: [LoanRequestController, LoanRequestV2Controller],
     exports: [LoanRequestService, PersonService, LoanTypeService],
 })
 export class LoanRequestModule {}

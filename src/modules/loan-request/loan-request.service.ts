@@ -7,6 +7,7 @@ import { LoanRequest } from 'src/common/entities/loan-request.entity';
 import { LoanTypeService } from '../loan-type/loan-type.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { amortization, withoutAmortization } from '../../utils/amortization.util';
 
 @Injectable()
 export class LoanRequestService {
@@ -65,6 +66,45 @@ export class LoanRequestService {
         loanRequest.person = person;
         return this.loanRequestRepository.save(loanRequest);
     }
+
+    async getLoanRequests() {
+        return this.loanRequestRepository.find({ relations: ['person', 'loan_type'] } );
+    }
+
+    async getLoanWithAmortization(loanRequestId: number) {
+        const loanRequest = await this.loanRequestRepository.find({
+            where: { id: loanRequestId },
+            relations: ['loan_type']
+        });
+
+        if (!loanRequest) {
+            throw new Error(`Loan request with id ${loanRequestId} not found`);
+        }
+
+        const { amount, years, loan_type } = (await loanRequest)[0];
+        const { interest_rate } = loan_type;
+        loanRequest[0].amortization = amortization(amount, interest_rate, years);
+        return loanRequest;
+    }
+
+    async getLoanWithoutAmortization(loanRequestId: number) {
+        const loanRequest = await this.loanRequestRepository.find({
+            where: { id: loanRequestId },
+            relations: ['loan_type']
+        });
+
+        if (!loanRequest) {
+            throw new Error(`Loan request with id ${loanRequestId} not found`);
+        }
+
+        const { amount, loan_type } = (await loanRequest)[0];
+        const { interest_rate } = loan_type;
+        loanRequest[0].amortization = withoutAmortization (amount, interest_rate);
+        return loanRequest;
+    }
+
+
+    
 
 
 }
