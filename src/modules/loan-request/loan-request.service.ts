@@ -104,7 +104,23 @@ export class LoanRequestService {
     }
 
 
-    
+    async approveLoanRequest(loanRequestId: number) {
+        const loanRequest = await this.loanRequestRepository.find({ where: { id: loanRequestId } } );
+        if (!loanRequest) {
+            throw new Error(`Loan request with id ${loanRequestId} not found`);
+        }
+        loanRequest[0].status = 'approved';
+        return this.loanRequestRepository.save(loanRequest);
+    }
+
+    async rejectLoanRequest(loanRequestId: number) {
+        const loanRequest = await this.loanRequestRepository.find({ where: { id: loanRequestId } } );
+        if (!loanRequest) {
+            throw new Error(`Loan request with id ${loanRequestId} not found`);
+        }
+        loanRequest[0].status = 'cancelled';
+        return this.loanRequestRepository.save(loanRequest);
+    }
 
 
 }

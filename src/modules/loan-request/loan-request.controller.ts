@@ -26,4 +26,16 @@ export class LoanRequestController {
         return this.LoanRequestService.getLoanWithoutAmortization(id);
     }
 
+    @Post('approve/:id')
+    @UseGuards(JwtAuthGuard)
+    async approveLoanRequest(@Param('id') id: number) {
+        return this.LoanRequestService.approveLoanRequest(id);
+    }
+
+    @Post('cancel/:id')
+    @UseGuards(JwtAuthGuard)
+    async rejectLoanRequest(@Param('id') id: number) {
+        return this.LoanRequestService.rejectLoanRequest(id);
+    }
+
 }
