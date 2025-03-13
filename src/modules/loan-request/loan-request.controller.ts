@@ -3,6 +3,7 @@ import { LoanRequestService } from './loan-request.service';
 import { CreateLoanRequestDto } from '../../common/dto/create-loan-request.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CancelLoanDto } from '../../common/dto/cancel-loan.dto';
+import { ApproveLoanDto } from '../../common/dto/approve-loan.dto';
 
 @Controller({ path: 'loan', version: '1' })
 export class LoanRequestController {
@@ -27,10 +28,10 @@ export class LoanRequestController {
         return this.LoanRequestService.getLoanWithoutAmortization(id);
     }
 
-    @Post('approve/:id')
+    @Post('/approve')
     @UseGuards(JwtAuthGuard)
-    async approveLoanRequest(@Param('id') id: number) {
-        return this.LoanRequestService.approveLoanRequest(id);
+    async approveLoanRequest(@Body() ApproveLoanDto: ApproveLoanDto) {
+        return this.LoanRequestService.approveLoanRequest(ApproveLoanDto);
     }
 
     @Post('/cancel')

@@ -6,6 +6,8 @@ import { UsersModule } from './modules/users/users.module';
 import { LoanRequestModule } from './modules/loan-request/loan-request.module';
 import { PersonModule } from './modules/person/person.module';
 import { LoanTypeModule } from './modules/loan-type/loan-type.module';
+import { LoanModule } from './modules/loan/loan.module';
+import { QuoteModule } from './modules/quote/quote.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { LoanTypeModule } from './modules/loan-type/loan-type.module';
     LoanRequestModule,
     PersonModule,
     LoanTypeModule,
+    LoanModule,
+    QuoteModule,
   ],
 })
 export class AppModule {}

@@ -10,12 +10,17 @@ import { Repository } from 'typeorm';
 import { amortization, withoutAmortization } from '../../utils/amortization.util';
 import { LoanCanceled } from 'src/common/entities/loan-canceled.entity';
 import { CancelLoanDto } from 'src/common/dto/cancel-loan.dto';
-
+import { LoanService } from '../loan/loan.service';
+import { ApproveLoanDto } from 'src/common/dto/approve-loan.dto';
+import { QuoteService } from '../quote/quote.service';
+import { CreateQuoteDto } from 'src/common/dto/create-quote.dto';
 @Injectable()
 export class LoanRequestService {
     constructor(
         private PersonService: PersonService,
         private LoanTypeService: LoanTypeService,
+        private LoanService: LoanService,
+        private QuoteService: QuoteService,
         @InjectRepository( LoanRequest )
         private readonly loanRequestRepository: Repository<LoanRequest>,
         @InjectRepository( LoanCanceled )
@@ -109,18 +114,33 @@ export class LoanRequestService {
     }
 
 
-    async approveLoanRequest(loanRequestId: number) {
-        const loanRequest = await this.loanRequestRepository.find({ where: { id: loanRequestId } } );
+    async approveLoanRequest(approveLoanDto: ApproveLoanDto) {
+        const { loan_request } = approveLoanDto;
+        const loanRequest = await this.loanRequestRepository.find({ where: { id: loan_request } } );
         if (!loanRequest) {
-            throw new Error(`Loan request with id ${loanRequestId} not found`);
+            throw new Error(`Loan request with id ${loan_request} not found`);
         }
-        loanRequest[0].status = 'approved';
-        return this.loanRequestRepository.save(loanRequest);
+
+        if(loanRequest[0].status !== 'pending') {
+            throw new Error(`Loan request with id ${loan_request} is not pending`);
+        } else {
+            //update loan request status
+            await this.loanRequestRepository.update(loan_request, { status: 'approved' });
+            //create loan
+            const loan = await this.LoanService.createLoan(approveLoanDto);
+            //TODO: make quote information
+            const quote = new CreateQuoteDto();
+            quote.amount = loan.amount_to_pay;
+            quote.loan = loan.id;
+            await this.QuoteService.createQuote(quote);
+            return loan;
+        }
+
     }
 
     async cancelLoanRequest(cancelLoanDto: CancelLoanDto) {
 
-        let loanRequest = await this.loanRequestRepository.find({ where: { id: cancelLoanDto.loan_request_id } } );
+        const loanRequest = await this.loanRequestRepository.find({ where: { id: cancelLoanDto.loan_request_id } } );
         if (!loanRequest) {
             throw new Error(`Loan request with id ${cancelLoanDto.loan_request_id} not found`);
         }

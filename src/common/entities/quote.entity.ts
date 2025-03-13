@@ -7,10 +7,10 @@ export class Quote {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     amount: number;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', default: 'pending' })
     status: string;
 
     @ManyToOne(() => Loan , (loan) => loan.quotes)

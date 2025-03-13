@@ -1,9 +1,9 @@
-import { IsString,IsInt, IsNotEmpty, MinLength, IsEmail, IsDecimal } from 'class-validator';
+import { IsInt, IsNotEmpty, IsDecimal } from 'class-validator';
 
 export class ApproveLoanDto {
     @IsInt()
     @IsNotEmpty()
-    loan_request_id: number;
+    loan_request: number;
 
     @IsDecimal()
     @IsNotEmpty()

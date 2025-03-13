@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { LoanType } from './loan-type.entity';
 import { LoanRequest } from './loan-request.entity';
 @Entity()
@@ -30,16 +30,19 @@ export class Loan {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     pending_amount: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2 })
-    pending_rate: number;
-
     @Column({ type: 'int' })
     pending_quote: number;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    paying_rate: number;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    amount_to_pay: number;
 
     @ManyToOne(() => LoanType, (loanType) => loanType.loan_requests)
     loan_type: LoanType;
 
-    @OneToOne(() => LoanRequest, (loanRequest) => loanRequest.id)
+    @ManyToOne(() => LoanRequest, (loanRequest) => loanRequest.id)
     loan_request: LoanRequest;
 
     @OneToMany(() => Loan, (loan) => loan.quotes)

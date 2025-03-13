@@ -1,16 +1,11 @@
-//amortization calculation that return the capital and interest
-interface AmortizationSchedule {
-  principal: number;
-  interest: number;
-  balance: number;
-}
+import { AmortizationSchedule } from '../common/interfaces/amortization-schedule.interface';
 
 function amortizationQuote(
   amount: number,
   rate: number,
   years: number,
 ): AmortizationSchedule[] {
-  let amortization: AmortizationSchedule[] = [];
+  const amortization: AmortizationSchedule[] = [];
   const monthlyRate = rate / 100 / 12;
   const monthlyPayment =
     (amount * monthlyRate) / (1 - Math.pow(1 / (1 + monthlyRate), years * 12));
