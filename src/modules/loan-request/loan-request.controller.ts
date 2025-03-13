@@ -2,6 +2,7 @@ import { Controller, Post, Get, Body, UseGuards, Param } from '@nestjs/common';
 import { LoanRequestService } from './loan-request.service';
 import { CreateLoanRequestDto } from '../../common/dto/create-loan-request.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CancelLoanDto } from '../../common/dto/cancel-loan.dto';
 
 @Controller({ path: 'loan', version: '1' })
 export class LoanRequestController {
@@ -32,10 +33,10 @@ export class LoanRequestController {
         return this.LoanRequestService.approveLoanRequest(id);
     }
 
-    @Post('cancel/:id')
+    @Post('/cancel')
     @UseGuards(JwtAuthGuard)
-    async rejectLoanRequest(@Param('id') id: number) {
-        return this.LoanRequestService.rejectLoanRequest(id);
+    async canceltLoanRequest(@Body() cancelLoanDto: CancelLoanDto) {
+        return this.LoanRequestService.cancelLoanRequest(cancelLoanDto);
     }
 
 }

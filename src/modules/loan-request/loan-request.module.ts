@@ -8,12 +8,14 @@ import { LoanTypeService } from '../loan-type/loan-type.service';
 import { Person } from 'src/common/entities/person.entity';
 import { LoanType } from 'src/common/entities/loan-type.entity';
 import { LoanRequestV2Controller } from './loan-request-v2.controller';
+import { LoanCanceled } from 'src/common/entities/loan-canceled.entity';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([LoanRequest]),
         TypeOrmModule.forFeature([Person]),
         TypeOrmModule.forFeature([LoanType]),
+        TypeOrmModule.forFeature([LoanCanceled]),
     ],
     providers: [LoanRequestService, PersonService, LoanTypeService],
     controllers: [LoanRequestController, LoanRequestV2Controller],

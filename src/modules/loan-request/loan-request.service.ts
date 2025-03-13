@@ -8,6 +8,8 @@ import { LoanTypeService } from '../loan-type/loan-type.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { amortization, withoutAmortization } from '../../utils/amortization.util';
+import { LoanCanceled } from 'src/common/entities/loan-canceled.entity';
+import { CancelLoanDto } from 'src/common/dto/cancel-loan.dto';
 
 @Injectable()
 export class LoanRequestService {
@@ -16,6 +18,8 @@ export class LoanRequestService {
         private LoanTypeService: LoanTypeService,
         @InjectRepository( LoanRequest )
         private readonly loanRequestRepository: Repository<LoanRequest>,
+        @InjectRepository( LoanCanceled )
+        private readonly loanCanceledRepository: Repository<LoanCanceled>
     ) { }
 
     async makeLoanRequest(createLoanRequestDto: CreateLoanRequestDto) {
@@ -83,7 +87,8 @@ export class LoanRequestService {
 
         const { amount, years, loan_type } = (await loanRequest)[0];
         const { interest_rate } = loan_type;
-        loanRequest[0].amortization = amortization(amount, interest_rate, years);
+        loanRequest[0].amortization = amortization(amount, interest_rate, years * 12)['pay'];
+        //year * 12 para obtener la cantidad de cuotas predeterminadas
         return loanRequest;
     }
 
@@ -113,13 +118,15 @@ export class LoanRequestService {
         return this.loanRequestRepository.save(loanRequest);
     }
 
-    async rejectLoanRequest(loanRequestId: number) {
-        const loanRequest = await this.loanRequestRepository.find({ where: { id: loanRequestId } } );
+    async cancelLoanRequest(cancelLoanDto: CancelLoanDto) {
+
+        let loanRequest = await this.loanRequestRepository.find({ where: { id: cancelLoanDto.loan_request_id } } );
         if (!loanRequest) {
-            throw new Error(`Loan request with id ${loanRequestId} not found`);
+            throw new Error(`Loan request with id ${cancelLoanDto.loan_request_id} not found`);
         }
-        loanRequest[0].status = 'cancelled';
-        return this.loanRequestRepository.save(loanRequest);
+        await this.loanRequestRepository.update(cancelLoanDto.loan_request_id, { status: 'cancelled' });
+        await this.loanCanceledRepository.save(cancelLoanDto);
+        return this.loanRequestRepository.find({ where: { id: cancelLoanDto.loan_request_id } } );
     }
 
 

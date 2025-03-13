@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne } from 'typ
 import { Person } from './person.entity';
 import { LoanType } from './loan-type.entity';
 import { Loan } from './loan.entity';
+import { LoanCanceled } from './loan-canceled.entity';
 
 @Entity()
 export class LoanRequest {
@@ -25,6 +26,9 @@ export class LoanRequest {
 
   @OneToOne(() => Loan, (loan) => loan.loan_request)
   loan: Loan;
+
+  @OneToOne(() => LoanCanceled, (loanCanceled) => loanCanceled.loan_request)
+  loan_canceled: LoanCanceled;
 
   amortization?: number;
 }

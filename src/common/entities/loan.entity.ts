@@ -24,7 +24,7 @@ export class Loan {
     @Column({ type: 'int' })
     payment_day_to_pay: number;
 
-    @Column({ type: 'varchar', length: 100 })
+    @Column({ type: 'varchar', length: 100, default: 'init' })
     status: string;
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
