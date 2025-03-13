@@ -39,6 +39,9 @@ export class Loan {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     amount_to_pay: number;
 
+    @Column({ type: 'date', default: new Date() })
+    next_payment_date: Date;
+
     @ManyToOne(() => LoanType, (loanType) => loanType.loan_requests)
     loan_type: LoanType;
 

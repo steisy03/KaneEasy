@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsDecimal } from 'class-validator';
+import { IsInt, IsNotEmpty, IsDecimal, IsDate } from 'class-validator';
 
 export class CreateQuoteDto {
     @IsDecimal()
@@ -8,5 +8,10 @@ export class CreateQuoteDto {
     @IsInt()
     @IsNotEmpty()
     loan: number;
+
+    @IsDate()
+    @IsNotEmpty()
+    payment_date: Date;
+
 
 }

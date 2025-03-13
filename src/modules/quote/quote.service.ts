@@ -23,7 +23,8 @@ export class QuoteService {
     async createQuote(createQuote : CreateQuoteDto) {
         const quote = this.quoteRepository.create({
             amount: createQuote.amount,
-            loan: createQuote.loan as DeepPartial<Loan>
+            loan: createQuote.loan as DeepPartial<Loan>,
+            payment_date: createQuote.payment_date
         });
         return this.quoteRepository.save(quote);
     }

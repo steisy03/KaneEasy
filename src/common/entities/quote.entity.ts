@@ -13,6 +13,9 @@ export class Quote {
     @Column({ type: 'varchar', default: 'pending' })
     status: string;
 
+    @Column({ type: 'date', default: new Date() })
+    payment_date: Date;
+
     @ManyToOne(() => Loan , (loan) => loan.quotes)
     loan: Loan;
 }

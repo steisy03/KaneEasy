@@ -6,7 +6,6 @@ import { Person } from '../../common/entities/person.entity';
 import { LoanRequest } from 'src/common/entities/loan-request.entity';
 import { LoanTypeService } from '../loan-type/loan-type.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { amortization, withoutAmortization } from '../../utils/amortization.util';
 import { LoanCanceled } from 'src/common/entities/loan-canceled.entity';
 import { CancelLoanDto } from 'src/common/dto/cancel-loan.dto';
@@ -14,6 +13,7 @@ import { LoanService } from '../loan/loan.service';
 import { ApproveLoanDto } from 'src/common/dto/approve-loan.dto';
 import { QuoteService } from '../quote/quote.service';
 import { CreateQuoteDto } from 'src/common/dto/create-quote.dto';
+import { Repository, DataSource } from 'typeorm';
 @Injectable()
 export class LoanRequestService {
     constructor(
@@ -24,7 +24,8 @@ export class LoanRequestService {
         @InjectRepository( LoanRequest )
         private readonly loanRequestRepository: Repository<LoanRequest>,
         @InjectRepository( LoanCanceled )
-        private readonly loanCanceledRepository: Repository<LoanCanceled>
+        private readonly loanCanceledRepository: Repository<LoanCanceled>,
+        private readonly dataSource: DataSource
     ) { }
 
     async makeLoanRequest(createLoanRequestDto: CreateLoanRequestDto) {
@@ -113,29 +114,43 @@ export class LoanRequestService {
         return loanRequest;
     }
 
-
     async approveLoanRequest(approveLoanDto: ApproveLoanDto) {
-        const { loan_request } = approveLoanDto;
-        const loanRequest = await this.loanRequestRepository.find({ where: { id: loan_request } } );
-        if (!loanRequest) {
-            throw new Error(`Loan request with id ${loan_request} not found`);
-        }
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
 
-        if(loanRequest[0].status !== 'pending') {
-            throw new Error(`Loan request with id ${loan_request} is not pending`);
-        } else {
-            //update loan request status
-            await this.loanRequestRepository.update(loan_request, { status: 'approved' });
-            //create loan
-            const loan = await this.LoanService.createLoan(approveLoanDto);
-            //TODO: make quote information
-            const quote = new CreateQuoteDto();
-            quote.amount = loan.amount_to_pay;
-            quote.loan = loan.id;
-            await this.QuoteService.createQuote(quote);
-            return loan;
-        }
+        try {
+            const { loan_request } = approveLoanDto;
+            const loanRequest = await this.loanRequestRepository.find({ where: { id: loan_request } });
+            if (!loanRequest) {
+                throw new Error(`Loan request with id ${loan_request} not found`);
+            }
 
+            if (loanRequest[0].status !== 'pending') {
+                throw new Error(`Loan request with id ${loan_request} is not pending`);
+            } else {
+                // Update loan request status
+                await queryRunner.manager.update(LoanRequest, loan_request, { status: 'approved' });
+
+                // Create loan
+                const loan = await this.LoanService.createLoan(approveLoanDto);
+
+                // Create quote information
+                const quote = new CreateQuoteDto();
+                quote.amount = loan.amount_to_pay;
+                quote.loan = loan.id;
+                quote.payment_date = loan.next_payment_date;
+                await this.QuoteService.createQuote(quote);
+                //
+                await queryRunner.commitTransaction();
+                return loan;
+            }
+        } catch (error) {
+            await queryRunner.rollbackTransaction();
+            throw error;
+        } finally {
+            await queryRunner.release();
+        }
     }
 
     async cancelLoanRequest(cancelLoanDto: CancelLoanDto) {
@@ -151,3 +166,6 @@ export class LoanRequestService {
 
 
 }
+
+
+

@@ -46,6 +46,10 @@ export class LoanService {
         const quote = approved_year * 12;
         const { pay } = amortization(approved_amount, approved_rate, quote);
         //
+        // Calculate the next payment date based on the payment_day
+        const currentDate = new Date();
+        const paymentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, payment_day);
+        //
         return await this.loanRepository.save({
             loan_request: LoanRequest[0],
             approved_amount,
@@ -59,6 +63,7 @@ export class LoanService {
             pending_quote: quote,
             paying_rate: 0,
             amount_to_pay: pay,
+            next_payment_date: paymentDate,
             loan_type: {id: LoanRequest[0].loan_type.id}
         });
     }
