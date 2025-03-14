@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Loan } from './loan.entity';
+import { Loan } from '../../modules/loan/entities/loan.entity';
 
 @Entity()
 export class Payment {  
@@ -12,9 +12,6 @@ export class Payment {
 
     @Column({ type: 'date' })
     date: Date;
-
-    @Column({ type: 'int' })
-    quote: number;
 
     @Column({ type: 'varchar' })
     status: number;

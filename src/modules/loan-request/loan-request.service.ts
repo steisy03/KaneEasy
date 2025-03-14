@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLoanRequestDto } from '../../common/dto/create-loan-request.dto';
-import { CreatePersonDto } from 'src/common/dto/create-person.dto';
+import { CreateLoanRequestDto } from './dto/create-loan-request.dto';
+import { CreatePersonDto } from 'src/modules/person/dto/create-person.dto';
 import { PersonService } from '../person/person.service';
-import { Person } from '../../common/entities/person.entity';
-import { LoanRequest } from 'src/common/entities/loan-request.entity';
+import { Person } from '../person/entities/person.entity';
+import { LoanRequest } from 'src/modules/loan/entities/loan-request.entity';
 import { LoanTypeService } from '../loan-type/loan-type.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { amortization, withoutAmortization } from '../../utils/amortization.util';
-import { LoanCanceled } from 'src/common/entities/loan-canceled.entity';
-import { CancelLoanDto } from 'src/common/dto/cancel-loan.dto';
+import { LoanCanceled } from 'src/modules/loan/entities/loan-canceled.entity';
+import { CancelLoanDto } from 'src/modules/loan-request/dto/cancel-loan.dto';
 import { LoanService } from '../loan/loan.service';
-import { ApproveLoanDto } from 'src/common/dto/approve-loan.dto';
+import { ApproveLoanDto } from 'src/modules/loan-request/dto/approve-loan.dto';
 import { QuoteService } from '../quote/quote.service';
-import { CreateQuoteDto } from 'src/common/dto/create-quote.dto';
+import { CreateQuoteDto } from 'src/modules/quote/dto/create-quote.dto';
 import { Repository, DataSource } from 'typeorm';
 @Injectable()
 export class LoanRequestService {

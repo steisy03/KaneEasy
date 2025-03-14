@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LoanType } from '../../common/entities/loan-type.entity';
+import { LoanType } from './entities/loan-type.entity';
 
 @Injectable()
 export class LoanTypeService {

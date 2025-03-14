@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { LoanService } from './loan.service';
 import { LoanController } from './loan.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Loan } from '../../common/entities/loan.entity';
-import { LoanRequest } from '../../common/entities/loan-request.entity';
+import { Loan } from './entities/loan.entity';
+import { LoanRequest } from './entities/loan-request.entity';
 import { QuoteService } from '../quote/quote.service';
-import { Quote } from '../../common/entities/quote.entity';
+import { Quote } from '../quote/entities/quote.entity';
 
 @Module({
   imports: [

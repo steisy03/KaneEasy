@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Loan } from '../../common/entities/loan.entity';
-import { ApproveLoanDto } from '../../common/dto/approve-loan.dto';
+import { Loan } from './entities/loan.entity';
+import { ApproveLoanDto } from '../loan-request/dto/approve-loan.dto';
 import { amortization } from 'src/utils/amortization.util';
-import { LoanRequest } from 'src/common/entities/loan-request.entity';
+import { LoanRequest } from 'src/modules/loan/entities/loan-request.entity';
 
 @Injectable()
 export class LoanService {

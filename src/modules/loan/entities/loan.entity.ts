@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
-import { LoanType } from './loan-type.entity';
-import { LoanRequest } from './loan-request.entity';
+import { LoanType } from '../../loan-type/entities/loan-type.entity';
+import { LoanRequest } from './loan-request.entity'; // Ensure this path is correct or the file exists
 @Entity()
 export class Loan {
     @PrimaryGeneratedColumn()

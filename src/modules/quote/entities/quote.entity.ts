@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Loan } from './loan.entity';
+import { Loan } from '../../loan/entities/loan.entity';
 
 @Entity()
 export class Quote {
@@ -10,7 +10,7 @@ export class Quote {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     amount: number;
 
-    @Column({ type: 'varchar', default: 'pending' })
+    @Column({ type: 'varchar', default: 'active' })
     status: string;
 
     @Column({ type: 'date', default: new Date() })

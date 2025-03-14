@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne } from 'typeorm';
-import { Person } from './person.entity';
-import { LoanType } from './loan-type.entity';
+import { Person } from '../../person/entities/person.entity';
+import { LoanType } from '../../loan-type/entities/loan-type.entity';
 import { Loan } from './loan.entity';
 import { LoanCanceled } from './loan-canceled.entity';
 

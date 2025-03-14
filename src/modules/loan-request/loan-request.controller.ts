@@ -1,9 +1,9 @@
 import { Controller, Post, Get, Body, UseGuards, Param } from '@nestjs/common';
 import { LoanRequestService } from './loan-request.service';
-import { CreateLoanRequestDto } from '../../common/dto/create-loan-request.dto';
+import { CreateLoanRequestDto } from './dto/create-loan-request.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { CancelLoanDto } from '../../common/dto/cancel-loan.dto';
-import { ApproveLoanDto } from '../../common/dto/approve-loan.dto';
+import { CancelLoanDto } from './dto/cancel-loan.dto';
+import { ApproveLoanDto } from './dto/approve-loan.dto';
 
 @Controller({ path: 'loan', version: '1' })
 export class LoanRequestController {

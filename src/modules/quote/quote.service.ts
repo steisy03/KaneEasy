@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeepPartial } from 'typeorm';
-import { Quote } from '../../common/entities/quote.entity';
-import { CreateQuoteDto } from '../../common/dto/create-quote.dto';
-import { Loan } from '../../common/entities/loan.entity';
+import { Quote } from './entities/quote.entity';
+import { CreateQuoteDto } from './dto/create-quote.dto';
+import { Loan } from '../loan/entities/loan.entity';
 
 @Injectable()
 export class QuoteService {
