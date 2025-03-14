@@ -44,7 +44,7 @@ export class LoanService {
         }
         
         const quote = approved_year * 12;
-        const { pay } = amortization(approved_amount, approved_rate, quote);
+        const { pay, principal, interest  } = amortization(approved_amount, approved_rate, quote);
         //
         // Calculate the next payment date based on the payment_day
         const currentDate = new Date();
@@ -64,7 +64,37 @@ export class LoanService {
             paying_rate: 0,
             amount_to_pay: pay,
             next_payment_date: paymentDate,
-            loan_type: {id: LoanRequest[0].loan_type.id}
+            loan_type: {id: LoanRequest[0].loan_type.id},
+            base_to_pay: principal,
+            rate_to_pay: interest
+        });
+    }
+
+    async updateLoanBalance(id: number) {
+        const loan = await this.loanRepository.findOne({ where: { id } });
+        if (!loan) {
+            throw new Error('Loan not found');
+        }
+        let { 
+            pending_amount, 
+            base_to_pay, 
+            rate_to_pay, 
+            paying_rate, 
+            pending_quote,
+            status 
+        } = loan;
+        pending_amount = Number(pending_amount) - Number(base_to_pay);
+        paying_rate = Number(paying_rate) + Number(rate_to_pay);
+        pending_quote = Number(pending_quote) - 1;
+        if (pending_quote === 0) {
+            status = 'paid';
+        }
+
+        await this.loanRepository.update(id, {
+            pending_amount,
+            paying_rate,
+            pending_quote,
+            status
         });
     }
 

@@ -13,6 +13,8 @@ import { Loan } from 'src/modules/loan/entities/loan.entity';
 import { LoanService } from '../loan/loan.service';
 import { QuoteService } from '../quote/quote.service';
 import { Quote } from 'src/modules/quote/entities/quote.entity';
+import { Pay } from 'src/modules/pay/entities/pay.entity';
+import { PayService } from '../pay/pay.service';
 @Module({
     imports: [
         TypeOrmModule.forFeature([LoanRequest]),
@@ -20,10 +22,28 @@ import { Quote } from 'src/modules/quote/entities/quote.entity';
         TypeOrmModule.forFeature([LoanType]),
         TypeOrmModule.forFeature([LoanCanceled]),
         TypeOrmModule.forFeature([Loan]),
-        TypeOrmModule.forFeature([Quote])
+        TypeOrmModule.forFeature([Quote]),
+        TypeOrmModule.forFeature([Pay]),
     ],
-    providers: [LoanRequestService, PersonService, LoanTypeService, LoanService, QuoteService],
-    controllers: [LoanRequestController, LoanRequestV2Controller],
-    exports: [LoanRequestService, PersonService, LoanTypeService, LoanService, QuoteService],
+    providers: [
+        LoanRequestService, 
+        PersonService, 
+        LoanTypeService, 
+        LoanService, 
+        QuoteService,
+        PayService
+    ],
+    controllers: [
+        LoanRequestController, 
+        LoanRequestV2Controller
+    ],
+    exports: [
+        LoanRequestService, 
+        PersonService, 
+        LoanTypeService, 
+        LoanService, 
+        QuoteService,
+        PayService
+    ],
 })
 export class LoanRequestModule {}

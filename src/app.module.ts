@@ -8,6 +8,7 @@ import { PersonModule } from './modules/person/person.module';
 import { LoanTypeModule } from './modules/loan-type/loan-type.module';
 import { LoanModule } from './modules/loan/loan.module';
 import { QuoteModule } from './modules/quote/quote.module';
+import { PayModule } from './modules/pay/pay.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { QuoteModule } from './modules/quote/quote.module';
     LoanTypeModule,
     LoanModule,
     QuoteModule,
+    PayModule,
   ],
 })
 export class AppModule {}

@@ -20,6 +20,16 @@ export class QuoteService {
         return this.quoteRepository.find();
     }
 
+    async updateQuote(id: number, status: string) {
+        const quote = await this.quoteRepository.findOne({ where: { id } });
+        if (!quote) {
+            throw new Error('Quote not found');
+        }
+        await this.quoteRepository.update(id, {
+            status
+        });
+    }
+
     async createQuote(createQuote : CreateQuoteDto) {
         const quote = this.quoteRepository.create({
             amount: createQuote.amount,

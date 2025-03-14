@@ -4,11 +4,16 @@ import { CreateLoanRequestDto } from './dto/create-loan-request.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CancelLoanDto } from './dto/cancel-loan.dto';
 import { ApproveLoanDto } from './dto/approve-loan.dto';
+import { CreatePayDto } from '../pay/dto/create-pay.dto';
+import { PayService } from '../pay/pay.service';
 
 @Controller({ path: 'loan', version: '1' })
 export class LoanRequestController {
 
-    constructor(private LoanRequestService: LoanRequestService) { }
+    constructor(
+        private LoanRequestService: LoanRequestService, 
+        private PayService: PayService
+    ) { }
 
     @Post()
     @UseGuards(JwtAuthGuard)
@@ -38,6 +43,12 @@ export class LoanRequestController {
     @UseGuards(JwtAuthGuard)
     async canceltLoanRequest(@Body() cancelLoanDto: CancelLoanDto) {
         return this.LoanRequestService.cancelLoanRequest(cancelLoanDto);
+    }
+
+    @Post('/payment')
+    @UseGuards(JwtAuthGuard)
+    async paymentLoanRequest(@Body() CreatePayDto: CreatePayDto) {
+        return this.PayService.createPay(CreatePayDto);
     }
 
 }

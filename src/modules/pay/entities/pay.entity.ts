@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Loan } from '../../modules/loan/entities/loan.entity';
+import { Loan } from '../../loan/entities/loan.entity';
 
 @Entity()
-export class Payment {  
+export class Pay {  
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -10,13 +10,13 @@ export class Payment {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     amount: number;
 
-    @Column({ type: 'date' })
+    @Column({ type: 'date', default: new Date() })
     date: Date;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', default: 'active' })
     status: number;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', length: 50, default: 'quote' })
     type: number;
 
     @ManyToOne(() => Loan, (loan) => loan.payments)
