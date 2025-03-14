@@ -24,7 +24,7 @@ export class LoanService {
     }
 
     async createLoan(approveLoanDto: ApproveLoanDto) {
-        const { 
+        const {
             loan_request,
             approved_amount,
             approved_rate,
@@ -34,17 +34,17 @@ export class LoanService {
         } = approveLoanDto;
 
         //TODO: fix that shit
-        const LoanRequest = await this.loanRequestRepository.find({ 
+        const LoanRequest = await this.loanRequestRepository.find({
             where: { id: loan_request },
-            relations : ['loan_type']
+            relations: ['loan_type']
         });
 
         if (!LoanRequest) {
             throw new Error('Loan request not found');
         }
-        
+
         const quote = approved_year * 12;
-        const { pay, principal, interest  } = amortization(approved_amount, approved_rate, quote);
+        const { pay, principal, interest } = amortization(approved_amount, approved_rate, quote);
         //
         // Calculate the next payment date based on the payment_day
         const currentDate = new Date();
@@ -64,7 +64,7 @@ export class LoanService {
             paying_rate: 0,
             amount_to_pay: pay,
             next_payment_date: paymentDate,
-            loan_type: {id: LoanRequest[0].loan_type.id},
+            loan_type: { id: LoanRequest[0].loan_type.id },
             base_to_pay: principal,
             rate_to_pay: interest
         });
@@ -75,21 +75,26 @@ export class LoanService {
         if (!loan) {
             throw new Error('Loan not found');
         }
-        let { 
-            pending_amount, 
-            base_to_pay, 
-            rate_to_pay, 
-            paying_rate, 
-            pending_quote,
-            status 
+        //
+        const {
+            base_to_pay,
+            rate_to_pay,
         } = loan;
+        //
+        let {
+            pending_amount,
+            paying_rate,
+            pending_quote,
+            status
+        } = loan;
+        //
         pending_amount = Number(pending_amount) - Number(base_to_pay);
         paying_rate = Number(paying_rate) + Number(rate_to_pay);
         pending_quote = Number(pending_quote) - 1;
         if (pending_quote === 0) {
             status = 'paid';
         }
-
+        //
         await this.loanRepository.update(id, {
             pending_amount,
             paying_rate,
@@ -98,4 +103,34 @@ export class LoanService {
         });
     }
 
+    async updateLoanAmortization(id: number, base_to_pay: number) {
+        const loan = await this.loanRepository.findOne({ where: { id } });
+        if (!loan) {
+            throw new Error('Loan not found');
+        }
+        //
+        let {
+            pending_amount,
+            status
+        } = loan;
+        //
+        const {
+            pending_quote,
+            approved_rate
+        } = loan;
+        //
+        const { pay, principal, interest } = amortization(pending_amount, approved_rate, pending_quote);
+        pending_amount = Number(pending_amount) - Number(base_to_pay);
+        if (pending_amount == 0) {
+            status = 'paid';
+        }
+        //
+        await this.loanRepository.update(id, {
+            pending_amount,
+            base_to_pay: principal,
+            rate_to_pay: interest,
+            amount_to_pay: pay,
+            status
+        });
+    }
 }

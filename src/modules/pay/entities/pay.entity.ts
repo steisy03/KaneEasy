@@ -17,7 +17,7 @@ export class Pay {
     status: number;
 
     @Column({ type: 'varchar', length: 50, default: 'quote' })
-    type: number;
+    type: string;
 
     @ManyToOne(() => Loan, (loan) => loan.payments)
     loan: Loan;

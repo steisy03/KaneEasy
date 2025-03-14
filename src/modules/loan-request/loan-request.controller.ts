@@ -16,7 +16,6 @@ export class LoanRequestController {
     ) { }
 
     @Post()
-    @UseGuards(JwtAuthGuard)
     async makeLoanRequest(@Body() CreateLoanRequestDto: CreateLoanRequestDto) {
         return this.LoanRequestService.makeLoanRequest(CreateLoanRequestDto);
     }
@@ -47,8 +46,14 @@ export class LoanRequestController {
 
     @Post('/payment')
     @UseGuards(JwtAuthGuard)
+    async payLoanRequest(@Body() CreatePayDto: CreatePayDto) {
+        return this.PayService.payQuote(CreatePayDto);
+    }
+
+    @Post('/abono')
+    @UseGuards(JwtAuthGuard)
     async paymentLoanRequest(@Body() CreatePayDto: CreatePayDto) {
-        return this.PayService.createPay(CreatePayDto);
+        return this.PayService.makeAPayment(CreatePayDto);
     }
 
 }
